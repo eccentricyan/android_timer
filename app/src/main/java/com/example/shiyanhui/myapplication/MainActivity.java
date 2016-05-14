@@ -99,15 +99,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     class MyTimerTask extends TimerTask {
         @Override
         public void run() {
-            mCounter += 0.01f;
+            mCounter += 0.001f;
 
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     int minute = (int)mCounter / 60;
                     int second = (int)mCounter % 60;
-                    int mm = (int)((mCounter - second - minute * 60) * 100);
-                    mCounterText.setText(String.format(minute + ":%02d.%02d", second, mm));
+                    int mm = (int)((mCounter - second - minute * 60) * 1000);
+                    mCounterText.setText(String.format(minute + ":%02d.%03d", second, mm));
                 }
             });
         }
@@ -124,18 +124,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.start:
                 if(isStarted) return;
                 mTimer = new Timer(true);
-                mTimer.schedule(new MyTimerTask(), 10, 10);
+                mTimer.schedule(new MyTimerTask(), 10, 1);
                 isStarted = true;
                 break;
 
             case R.id.stop:
+                if(!isStarted) return;
                 stopTimer();
                 break;
 
             case R.id.reset:
+                if(mTimer == null) return;
                 mCounter = 0;
                 stopTimer();
-                mCounterText.setText("0:00.00");
+                mCounterText.setText("0:00.000");
                 break;
         }
     }
